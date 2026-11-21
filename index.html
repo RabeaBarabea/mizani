@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ميزاني | Mizani</title>
+
+    <!-- PWA & Mobile App Meta Tags -->
+    <meta name="description" content="حدد ما تريد إنجازه في حياتك، ثم شاهد توازنك.">
+    <meta name="theme-color" content="#0d9488">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ميزاني">
+    <link rel="manifest" href="./manifest.json">
+
+    <!-- Embedded SVG App Icon (Works offline & for Home Screen) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d9488'/%3E%3Ccircle cx='256' cy='256' r='148' fill='none' stroke='%23ccfbf1' stroke-width='20' stroke-opacity='0.35'/%3E%3Cpath d='M256 256 L256 108 A148 148 0 0 1 384 182 Z' fill='%23ffffff' fill-opacity='0.95'/%3E%3Cpath d='M256 256 L384 182 A148 148 0 0 1 384 330 Z' fill='%2399f6e4' fill-opacity='0.9'/%3E%3Cpath d='M256 256 L384 330 A148 148 0 0 1 256 404 Z' fill='%23ffffff' fill-opacity='0.8'/%3E%3Cpath d='M256 256 L256 404 A148 148 0 0 1 128 330 Z' fill='%235eead4' fill-opacity='0.85'/%3E%3Cpath d='M256 256 L128 330 A148 148 0 0 1 128 182 Z' fill='%23ffffff' fill-opacity='0.7'/%3E%3Cpath d='M256 256 L128 182 A148 148 0 0 1 256 108 Z' fill='%2399f6e4' fill-opacity='0.75'/%3E%3Ccircle cx='256' cy='256' r='26' fill='%230d9488' stroke='%23ffffff' stroke-width='8'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d9488'/%3E%3Ccircle cx='256' cy='256' r='148' fill='none' stroke='%23ccfbf1' stroke-width='20' stroke-opacity='0.35'/%3E%3Cpath d='M256 256 L256 108 A148 148 0 0 1 384 182 Z' fill='%23ffffff' fill-opacity='0.95'/%3E%3Cpath d='M256 256 L384 182 A148 148 0 0 1 384 330 Z' fill='%2399f6e4' fill-opacity='0.9'/%3E%3Cpath d='M256 256 L384 330 A148 148 0 0 1 256 404 Z' fill='%23ffffff' fill-opacity='0.8'/%3E%3Cpath d='M256 256 L256 404 A148 148 0 0 1 128 330 Z' fill='%235eead4' fill-opacity='0.85'/%3E%3Cpath d='M256 256 L128 330 A148 148 0 0 1 128 182 Z' fill='%23ffffff' fill-opacity='0.7'/%3E%3Cpath d='M256 256 L128 182 A148 148 0 0 1 256 108 Z' fill='%2399f6e4' fill-opacity='0.75'/%3E%3Ccircle cx='256' cy='256' r='26' fill='%230d9488' stroke='%23ffffff' stroke-width='8'/%3E%3C/svg%3E">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+
+    <!-- Babel for in-browser JSX compilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        surface: '#ffffff',
+                        background: '#f8fafc',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior-y: none;
+        }
+        /* Mobile Safe Area Support (iOS Notch & Android Gestures) */
+        .safe-top {
+            padding-top: max(1.5rem, env(safe-area-inset-top));
+        }
+        .safe-bottom {
+            padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
+        }
+        button {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .svg-transition {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .progress-transition {
+            transition: width 0.4s ease-out;
+        }
+        /* Hide scrollbars cleanly while preserving touch scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased selection:bg-brand-200">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo, forwardRef } = React;
+
+        // --- Error Boundary to prevent silent white screens ---
+        class ErrorBoundary extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { hasError: false, message: '' };
+            }
+            static getDerivedStateFromError(error) {
+                return { hasError: true, message: error?.message || 'حدث خطأ غير متوقع' };
+            }
+            render() {
+                if (this.state.hasError) {
+                    return (
+                        <div className="min-h-screen flex items-center justify-center p-6 bg-background">
+                            <div className="bg-surface border border-slate-200 rounded-3xl p-6 max-w-sm w-full text-center space-y-3 shadow-sm">
+                                <div className="text-3xl">⚖️</div>
+                                <h2 className="text-lg font-bold text-slate-800">تعذر عرض ميزاني</h2>
+                                <p className="text-sm text-slate-500">{this.state.message}</p>
+                                <button
+                                    type="button"
+                                    onClick={() => window.location.reload()}
+                                    className="px-4 py-2.5 rounded-xl bg-brand-600 text-white text-sm font-bold hover:bg-brand-700"
+                                >
+                                    إعادة المحاولة
+                                </button>
+                            </div>
+                        </div>
+                    );
+                }
+                return this.props.children;
+            }
+        }
+
+        // --- SVG Geometry Helpers for Wheel of Life ---
+        const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
+            const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+            return {
+                x: centerX + radius * Math.cos(angleInRadians),
+                y: centerY + radius * Math.sin(angleInRadians),
+            };
+        };
+
+        const describeArc = (x, y, radius, startAngle, endAngle) => {
+            const start = polarToCartesian(x, y, radius, endAngle);
+            const end = polarToCartesian(x, y, radius, startAngle);
+            const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+            return [
+                'M', x, y,
+                'L', start.x, start.y,
+                'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y,
+                'Z',
+            ].join(' ');
+        };
+
+        // --- Initial Realistic Data (Weekly, Monthly & Yearly) ---
+        const initialData = {
+            weekly: [
+                {
+                    id: 'w_spiritual',
+                    name: 'الروحاني',
+                    icon: '🕌',
+                    goals: [
+                        { id: 'w1', type: 'binary', text: 'قراءة سورة الكهف', completed: true },
+                        { id: 'w2', type: 'numeric', text: 'ورد القرآن اليومي', current: 5, target: 7 },
+                    ],
+                },
+                {
+                    id: 'w_health',
+                    name: 'الصحي',
+                    icon: '🏃‍♂️',
+                    goals: [
+                        { id: 'w3', type: 'numeric', text: 'حصص الرياضة', current: 2, target: 3 },
+                        { id: 'w4', type: 'binary', text: 'تنظيم مواعيد النوم', completed: false },
+                    ],
+                },
+                {
+                    id: 'w_education',
+                    name: 'التعليمي',
+                    icon: '📚',
+                    goals: [
+                        { id: 'w5', type: 'binary', text: 'إنهاء فصلين من الكتاب', completed: true },
+                        { id: 'w6', type: 'numeric', text: 'دروس الكورس', current: 2, target: 3 },
+                    ],
+                },
+                {
+                    id: 'w_career',
+                    name: 'المهني',
+                    icon: '💼',
+                    goals: [
+                        { id: 'w7', type: 'binary', text: 'إنجاز مهام المشروع الأساسية', completed: false },
+                        { id: 'w8', type: 'binary', text: 'مراجعة خطة الأسبوع', completed: true },
+                    ],
+                },
+                {
+                    id: 'w_family',
+                    name: 'الأسري',
+                    icon: '👨‍👩‍👧‍👦',
+                    goals: [
+                        { id: 'w9', type: 'binary', text: 'جلسة عائلية هادئة', completed: true },
+                    ],
+                },
+                {
+                    id: 'w_financial',
+                    name: 'المالي',
+                    icon: '💰',
+                    goals: [
+                        { id: 'w10', type: 'binary', text: 'مراجعة مصاريف الأسبوع', completed: false },
+                    ],
+                },
+            ],
+            monthly: [
+                {
+                    id: 'spiritual',
+                    name: 'الروحاني',
+                    icon: '🕌',
+                    goals: [
+                        { id: 'm1', type: 'binary', text: 'قراءة الورد الشهري', completed: true },
+                        { id: 'm2', type: 'binary', text: 'مراجعة حفظ السورة', completed: true },
+                        { id: 'm3', type: 'numeric', text: 'صيام أيام البيض', current: 2, target: 3 },
+                    ],
+                },
+                {
+                    id: 'health',
+                    name: 'الصحي',
+                    icon: '🏃‍♂️',
+                    goals: [
+                        { id: 'm4', type: 'numeric', text: 'ممارسة الرياضة', current: 8, target: 12 },
+                        { id: 'm5', type: 'binary', text: 'فحص طبي دوري', completed: true },
+                    ],
+                },
+                {
+                    id: 'education',
+                    name: 'التعليمي',
+                    icon: '📚',
+                    goals: [
+                        { id: 'm6', type: 'binary', text: 'إنهاء كتاب العادات الذرية', completed: false },
+                        { id: 'm7', type: 'numeric', text: 'إتمام دروس الكورس', current: 6, target: 10 },
+                    ],
+                },
+                {
+                    id: 'career',
+                    name: 'المهني',
+                    icon: '💼',
+                    goals: [
+                        { id: 'm8', type: 'binary', text: 'تحديث معرض الأعمال', completed: true },
+                        { id: 'm9', type: 'binary', text: 'تسليم مشروع الشهر', completed: false },
+                    ],
+                },
+                {
+                    id: 'family',
+                    name: 'الأسري',
+                    icon: '👨‍👩‍👧‍👦',
+                    goals: [
+                        { id: 'm10', type: 'numeric', text: 'جلسات عائلية', current: 3, target: 4 },
+                    ],
+                },
+                {
+                    id: 'financial',
+                    name: 'المالي',
+                    icon: '💰',
+                    goals: [
+                        { id: 'm11', type: 'numeric', text: 'الادخار الشهري', current: 500, target: 1000, step: 100 },
+                    ],
+                },
+            ],
+            yearly: [
+                {
+                    id: 'y_spiritual',
+                    name: 'الروحاني',
+                    icon: '🕌',
+                    goals: [
+                        { id: 'y1', type: 'numeric', text: 'ختم القرآن الكريم', current: 4, target: 12 },
+                        { id: 'y2', type: 'binary', text: 'أداء العمرة', completed: true },
+                    ],
+                },
+                {
+                    id: 'y_education',
+                    name: 'التعليمي',
+                    icon: '📚',
+                    goals: [
+                        { id: 'y3', type: 'numeric', text: 'قراءة 12 كتابًا', current: 5, target: 12 },
+                        { id: 'y4', type: 'binary', text: 'الحصول على شهادة مهنية', completed: false },
+                    ],
+                },
+                {
+                    id: 'y_health',
+                    name: 'الصحي',
+                    icon: '🏃‍♂️',
+                    goals: [
+                        { id: 'y5', type: 'binary', text: 'الجري لمسافة 5 كم متواصلة', completed: true },
+                        { id: 'y6', type: 'numeric', text: 'أسابيع التزام بالرياضة', current: 22, target: 40 },
+                    ],
+                },
+                {
+                    id: 'y_financial',
+                    name: 'المالي',
+                    icon: '💰',
+                    goals: [
+                        { id: 'y7', type: 'binary', text: 'بناء صندوق طوارئ لـ 6 أشهر', completed: false },
+                    ],
+                },
+            ],
+        };
+
+        // --- Local-Only Storage & Mobile Haptic Helpers ---
+        const STORAGE_KEYS = {
+            data: 'mizani_local_data_v1',
+            period: 'mizani_local_period_v1',
+            viewMode: 'mizani_local_view_v1',
+            selectedDomain: 'mizani_local_selected_domain_v1',
+        };
+
+        const isValidMizaniData = (obj) => {
+            return (
+                obj &&
+                typeof obj === 'object' &&
+                Array.isArray(obj.weekly) &&
+                Array.isArray(obj.monthly) &&
+                Array.isArray(obj.yearly)
+            );
+        };
+
+        const loadSavedData = () => {
+            try {
+                const raw = window.localStorage.getItem(STORAGE_KEYS.data);
+                if (!raw) return initialData;
+                const parsed = JSON.parse(raw);
+                if (isValidMizaniData(parsed)) return parsed;
+            } catch (err) {}
+            return initialData;
+        };
+
+        const loadSavedString = (key, allowed, fallback) => {
+            try {
+                const val = window.localStorage.getItem(key);
+                if (val && (!allowed || allowed.includes(val))) return val;
+            } catch (err) {}
+            return fallback;
+        };
+
+        const triggerHaptic = () => {
+            try {
+                if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+                    navigator.vibrate(10);
+                }
+            } catch (err) {}
+        };
+
+        // --- Score Calculation Helpers (Equal Weight per Domain) ---
+        const getGoalProgress = (goal) => {
+            if (goal.type === 'binary') {
+                return goal.completed ? 100 : 0;
+            }
+            const target = Math.max(1, Number(goal.target) || 1);
+            const current = Math.max(0, Number(goal.current) || 0);
+            return Math.min(100, (current / target) * 100);
+        };
+
+        const calculateDomainScore = (domain) => {
+            if (!domain || !domain.goals || domain.goals.length === 0) return 0;
+            const total = domain.goals.reduce((sum, goal) => sum + getGoalProgress(goal), 0);
+            return Math.round(total / domain.goals.length);
+        };
+
+        const calculateOverallScore = (domains) => {
+            if (!domains || domains.length === 0) return 0;
+            const total = domains.reduce((sum, domain) => sum + calculateDomainScore(domain), 0);
+            return Math.round(total / domains.length);
+        };
+
+        // --- Subtle Circular Overall Progress Badge ---
+        const OverallProgressRing = ({ score }) => {
+            const radius = 24;
+            const circumference = 2 * Math.PI * radius;
+            const strokeDashoffset = circumference - (score / 100) * circumference;
+
+            return (
+                <div className="relative w-14 h-14 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-14 h-14 -rotate-90" viewBox="0 0 60 60">
+                        <circle
+                            cx="30"
+                            cy="30"
+                            r={radius}
+                            fill="none"
+                            stroke="#f1f5f9"
+                            strokeWidth="5"
+                        />
+                        <circle
+                            cx="30"
+                            cy="30"
+                            r={radius}
+                            fill="none"
+                            stroke="#14b8a6"
+                            strokeWidth="5"
+                            strokeLinecap="round"
+                            strokeDasharray={circumference}
+                            strokeDashoffset={strokeDashoffset}
+                            className="svg-transition"
+                        />
+                    </svg>
+                    <span className="absolute text-xs font-extrabold text-slate-800">{score}%</span>
+                </div>
+            );
+        };
+
+        // --- Interactive Wheel of Life Component ---
+        const WheelOfLife = ({ domains, selectedDomainId, onSegmentClick, isEmpty = false }) => {
+            const size = 250;
+            const center = size / 2;
+            const radius = 94;
+
+            if (isEmpty || domains.length === 0) {
+                const emptySlices = 6;
+                const anglePerSlice = 360 / emptySlices;
+                return (
+                    <div className="flex justify-center items-center py-2">
+                        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="overflow-visible">
+                            {[0.33, 0.66, 1].map((scale, idx) => (
+                                <circle
+                                    key={idx}
+                                    cx={center}
+                                    cy={center}
+                                    r={radius * scale}
+                                    fill="none"
+                                    stroke="#e2e8f0"
+                                    strokeDasharray="4 4"
+                                    strokeWidth="1"
+                                />
+                            ))}
+                            {Array.from({ length: emptySlices }).map((_, i) => {
+                                const path = describeArc(center, center, radius, i * anglePerSlice, (i + 1) * anglePerSlice);
+                                return (
+                                    <path
+                                        key={i}
+                                        d={path}
+                                        fill="#f8fafc"
+                                        stroke="#e2e8f0"
+                                        strokeWidth="1.5"
+                                    />
+                                );
+                            })}
+                            <circle cx={center} cy={center} r="10" fill="#cbd5e1" />
+                        </svg>
+                    </div>
+                );
+            }
+
+            const anglePerSlice = 360 / domains.length;
+
+            return (
+                <div className="flex flex-col items-center py-1">
+                    <svg
+                        width={size}
+                        height={size}
+                        viewBox={`0 0 ${size} ${size}`}
+                        className="overflow-visible"
+                        role="img"
+                        aria-label="عجلة الحياة"
+                    >
+                        {[0.33, 0.66, 1].map((scale, idx) => (
+                            <circle
+                                key={idx}
+                                cx={center}
+                                cy={center}
+                                r={radius * scale}
+                                fill="none"
+                                stroke="#f1f5f9"
+                                strokeWidth="1"
+                            />
+                        ))}
+
+                        {domains.length === 1 ? (() => {
+                            const domain = domains[0];
+                            const score = calculateDomainScore(domain);
+                            const fillRadius = Math.max(16, (score / 100) * radius);
+                            return (
+                                <g onClick={() => onSegmentClick(domain.id)} className="cursor-pointer">
+                                    <circle cx={center} cy={center} r={radius} fill="#f0fdfa" stroke="#99f6e4" strokeWidth="2" />
+                                    <circle cx={center} cy={center} r={fillRadius} fill="#0d9488" className="svg-transition" />
+                                    <text
+                                        x={center}
+                                        y={center - radius - 16}
+                                        textAnchor="middle"
+                                        dominantBaseline="central"
+                                        fontSize="16"
+                                    >
+                                        {domain.icon}
+                                    </text>
+                                </g>
+                            );
+                        })() : (
+                            domains.map((domain, i) => {
+                                const startAngle = i * anglePerSlice;
+                                const endAngle = (i + 1) * anglePerSlice;
+                                const score = calculateDomainScore(domain);
+                                const fillRadius = Math.max(16, (score / 100) * radius);
+                                const isSelected = selectedDomainId === domain.id;
+                                const isDimmed = Boolean(selectedDomainId) && !isSelected;
+
+                                const bgPath = describeArc(center, center, radius, startAngle, endAngle);
+                                const fgPath = describeArc(center, center, fillRadius, startAngle, endAngle);
+
+                                const midAngle = startAngle + anglePerSlice / 2;
+                                const labelPos = polarToCartesian(center, center, radius + 21, midAngle);
+
+                                return (
+                                    <g
+                                        key={domain.id}
+                                        onClick={() => onSegmentClick(domain.id)}
+                                        className="cursor-pointer group"
+                                        style={{
+                                            opacity: isDimmed ? 0.45 : 1,
+                                            transition: 'opacity 0.25s ease',
+                                        }}
+                                    >
+                                        <path
+                                            d={bgPath}
+                                            fill={isSelected ? '#f0fdfa' : '#f8fafc'}
+                                            stroke={isSelected ? '#5eead4' : '#ffffff'}
+                                            strokeWidth={isSelected ? '2.5' : '2'}
+                                            className="svg-transition"
+                                        />
+                                        <path
+                                            d={fgPath}
+                                            fill={isSelected ? '#0d9488' : '#14b8a6'}
+                                            fillOpacity={isSelected ? 0.95 : 0.78}
+                                            stroke="#ffffff"
+                                            strokeWidth="1.5"
+                                            className="svg-transition"
+                                        />
+                                        <text
+                                            x={labelPos.x}
+                                            y={labelPos.y}
+                                            textAnchor="middle"
+                                            dominantBaseline="central"
+                                            fontSize={isSelected ? '17' : '15'}
+                                            className="select-none pointer-events-none"
+                                        >
+                                            {domain.icon}
+                                        </text>
+                                    </g>
+                                );
+                            })
+                        )}
+
+                        <circle cx={center} cy={center} r="10" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1.5" />
+                        <circle cx={center} cy={center} r="4" fill="#0f766e" />
+                    </svg>
+                    <p className="text-[11px] text-slate-400 mt-1">
+                        اضغط على أي قطاع في العجلة للتركيز على مجاله
+                    </p>
+                </div>
+            );
+        };
+
+        // --- Reusable Goal Item Component (Binary & Numeric + Delete Goal) ---
+        const GoalItem = ({ goal, onToggle, onUpdateNumeric, onRemove }) => {
+            const DeleteButton = () => (
+                <button
+                    type="button"
+                    onClick={onRemove}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 active:bg-red-100 transition-colors flex-shrink-0"
+                    aria-label={`حذف هدف ${goal.text}`}
+                    title="حذف الهدف"
+                >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            );
+
+            if (goal.type === 'binary') {
+                return (
+                    <div className="w-full flex items-center justify-between gap-2 p-2.5 rounded-2xl hover:bg-slate-50/80 transition-colors min-h-[48px]">
+                        <button
+                            type="button"
+                            onClick={onToggle}
+                            className="flex-1 flex items-center gap-3 text-right py-1"
+                        >
+                            <span
+                                className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 border transition-all ${
+                                    goal.completed
+                                        ? 'bg-brand-500 border-brand-500 text-white'
+                                        : 'border-slate-300 bg-white text-transparent'
+                                }`}
+                                aria-hidden="true"
+                            >
+                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                </svg>
+                            </span>
+                            <span
+                                className={`text-sm font-medium leading-relaxed transition-colors ${
+                                    goal.completed ? 'text-slate-400 line-through' : 'text-slate-700'
+                                }`}
+                            >
+                                {goal.text}
+                            </span>
+                        </button>
+                        <DeleteButton />
+                    </div>
+                );
+            }
+
+            const step = goal.step || 1;
+            const isCompleted = goal.current >= goal.target;
+            const percent = Math.min(100, Math.round((goal.current / Math.max(1, goal.target)) * 100));
+
+            return (
+                <div className="w-full p-2.5 rounded-2xl hover:bg-slate-50/80 transition-colors space-y-2.5">
+                    <div className="flex items-center justify-between gap-2">
+                        <span
+                            className={`text-sm font-medium leading-relaxed transition-colors flex-1 ${
+                                isCompleted ? 'text-slate-400 line-through' : 'text-slate-700'
+                            }`}
+                        >
+                            {goal.text}
+                        </span>
+
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                            <div className="flex items-center gap-1 bg-white border border-slate-200/80 rounded-xl p-1">
+                                <button
+                                    type="button"
+                                    onClick={() => onUpdateNumeric(step)}
+                                    disabled={isCompleted}
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-brand-600 hover:bg-brand-50 active:bg-brand-100 disabled:opacity-30 transition-colors"
+                                    aria-label="زيادة التقدم"
+                                >
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v12m6-6H6" />
+                                    </svg>
+                                </button>
+
+                                <span className="text-xs font-bold text-slate-700 min-w-[3rem] text-center" dir="ltr">
+                                    {goal.current} / {goal.target}
+                                </span>
+
+                                <button
+                                    type="button"
+                                    onClick={() => onUpdateNumeric(-step)}
+                                    disabled={goal.current <= 0}
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 active:bg-red-100 disabled:opacity-30 transition-colors"
+                                    aria-label="تقليل التقدم"
+                                >
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M18 12H6" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <DeleteButton />
+                        </div>
+                    </div>
+
+                    <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div
+                            className="bg-brand-400 h-1.5 rounded-full progress-transition"
+                            style={{ width: `${percent}%` }}
+                        ></div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Lightweight Inline Add Goal Form ---
+        const AddGoalForm = ({ onAdd }) => {
+            const [isOpen, setIsOpen] = useState(false);
+            const [text, setText] = useState('');
+            const [goalType, setGoalType] = useState('binary');
+            const [target, setTarget] = useState('10');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!text.trim()) return;
+
+                if (goalType === 'binary') {
+                    onAdd({
+                        id: 'g_' + Date.now(),
+                        type: 'binary',
+                        text: text.trim(),
+                        completed: false,
+                    });
+                } else {
+                    const numericTarget = Math.max(1, parseInt(target, 10) || 1);
+                    onAdd({
+                        id: 'g_' + Date.now(),
+                        type: 'numeric',
+                        text: text.trim(),
+                        current: 0,
+                        target: numericTarget,
+                        step: numericTarget >= 100 ? 50 : 1,
+                    });
+                }
+
+                setText('');
+                setTarget('10');
+                setGoalType('binary');
+                setIsOpen(false);
+            };
+
+            if (!isOpen) {
+                return (
+                    <button
+                        type="button"
+                        onClick={() => setIsOpen(true)}
+                        className="w-full flex items-center gap-2 px-3 py-3 rounded-2xl text-sm font-bold text-brand-600 hover:bg-brand-50 active:bg-brand-100 transition-colors min-h-[44px]"
+                    >
+                        <span className="text-base leading-none">+</span>
+                        <span>أضف هدفًا</span>
+                    </button>
+                );
+            }
+
+            return (
+                <form onSubmit={handleSubmit} className="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-3">
+                    <input
+                        type="text"
+                        autoFocus
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        placeholder="مثال: إنهاء كتاب العادات الذرية"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+                    />
+
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl p-1">
+                            <button
+                                type="button"
+                                onClick={() => setGoalType('binary')}
+                                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                                    goalType === 'binary'
+                                        ? 'bg-brand-50 text-brand-700'
+                                        : 'text-slate-500 hover:text-slate-700'
+                                }`}
+                            >
+                                إنجاز مباشر
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setGoalType('numeric')}
+                                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                                    goalType === 'numeric'
+                                        ? 'bg-brand-50 text-brand-700'
+                                        : 'text-slate-500 hover:text-slate-700'
+                                }`}
+                            >
+                                هدف رقمي
+                            </button>
+                        </div>
+
+                        {goalType === 'numeric' && (
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-xs text-slate-500">الهدف:</span>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={target}
+                                    onChange={(e) => setTarget(e.target.value)}
+                                    className="w-20 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold text-center text-slate-800 focus:outline-none focus:border-brand-400"
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2">
+                        <button
+                            type="button"
+                            onClick={() => setIsOpen(false)}
+                            className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-200/60 transition-colors"
+                        >
+                            إلغاء
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-4 py-2 rounded-xl text-xs font-bold bg-brand-600 text-white hover:bg-brand-700 transition-colors"
+                        >
+                            إضافة
+                        </button>
+                    </div>
+                </form>
+            );
+        };
+
+        // --- Reusable Domain Card Component ---
+        const DomainCard = forwardRef(({
+            domain,
+            score,
+            onToggle,
+            onUpdateNumeric,
+            onAddGoal,
+            onRemoveGoal,
+            onRemove,
+        }, ref) => {
+            const [confirmDelete, setConfirmDelete] = useState(false);
+
+            return (
+                <section
+                    ref={ref}
+                    className="bg-surface border border-slate-200/80 rounded-3xl p-5 shadow-sm space-y-4 scroll-mt-4"
+                >
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                            <div className="w-11 h-11 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center text-xl">
+                                {domain.icon}
+                            </div>
+                            <div>
+                                <h2 className="text-base font-bold text-slate-800">{domain.name}</h2>
+                                <p className="text-xs text-slate-400">
+                                    {domain.goals.length === 0
+                                        ? 'لا توجد أهداف بعد'
+                                        : `${domain.goals.length} ${domain.goals.length === 1 ? 'هدف' : 'أهداف'}`}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <span className="text-lg font-extrabold text-brand-600">{score}%</span>
+                            {!confirmDelete ? (
+                                <button
+                                    type="button"
+                                    onClick={() => setConfirmDelete(true)}
+                                    className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-300 hover:text-red-400 hover:bg-red-50 transition-colors"
+                                    aria-label={`حذف مجال ${domain.name}`}
+                                    title="حذف المجال"
+                                >
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            ) : (
+                                <div className="flex items-center gap-1 bg-red-50 px-2 py-1 rounded-xl">
+                                    <button
+                                        type="button"
+                                        onClick={onRemove}
+                                        className="text-xs font-bold text-red-600 px-1.5 py-1"
+                                    >
+                                        حذف
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setConfirmDelete(false)}
+                                        className="text-xs text-slate-500 px-1.5 py-1"
+                                    >
+                                        تراجع
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                        <div
+                            className="bg-brand-500 h-2 rounded-full progress-transition"
+                            style={{ width: `${score}%` }}
+                        ></div>
+                    </div>
+
+                    <div className="divide-y divide-slate-100/80">
+                        {domain.goals.length === 0 ? (
+                            <p className="text-xs text-slate-400 text-center py-4">
+                                أضف هدفك الأول في مجال {domain.name}
+                            </p>
+                        ) : (
+                            domain.goals.map((goal) => (
+                                <GoalItem
+                                    key={goal.id}
+                                    goal={goal}
+                                    onToggle={() => onToggle(goal.id)}
+                                    onUpdateNumeric={(delta) => onUpdateNumeric(goal.id, delta)}
+                                    onRemove={() => onRemoveGoal(goal.id)}
+                                />
+                            ))
+                        )}
+                    </div>
+
+                    <div className="pt-1 border-t border-slate-100">
+                        <AddGoalForm onAdd={onAddGoal} />
+                    </div>
+                </section>
+            );
+        });
+
+        // --- Lightweight Inline Add Domain Form ---
+        const AddDomainForm = ({ onAdd, buttonText = '+ إضافة مجال', initialEditing = false, onCancel }) => {
+            const [name, setName] = useState('');
+            const [isEditing, setIsEditing] = useState(initialEditing);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!name.trim()) return;
+                onAdd(name.trim());
+                setName('');
+                setIsEditing(false);
+            };
+
+            const handleCancel = () => {
+                setIsEditing(false);
+                if (onCancel) onCancel();
+            };
+
+            if (!isEditing) {
+                return (
+                    <button
+                        type="button"
+                        onClick={() => setIsEditing(true)}
+                        className="w-full py-3.5 px-4 rounded-2xl border border-dashed border-slate-300 text-sm font-bold text-slate-500 hover:border-brand-400 hover:text-brand-600 hover:bg-brand-50/40 transition-colors"
+                    >
+                        {buttonText}
+                    </button>
+                );
+            }
+
+            return (
+                <form
+                    onSubmit={handleSubmit}
+                    className="bg-surface border border-slate-200 rounded-2xl p-3 flex items-center gap-2 shadow-sm"
+                >
+                    <input
+                        type="text"
+                        autoFocus
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="اسم المجال (مثال: العلاقات)"
+                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-brand-400"
+                    />
+                    <button
+                        type="submit"
+                        className="bg-brand-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 transition-colors"
+                    >
+                        إضافة
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleCancel}
+                        className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                        aria-label="إغلاق"
+                    >
+                        ✕
+                    </button>
+                </form>
+            );
+        };
+
+        // --- Minimal PWA Install Card (Calm & Dismissible) ---
+        const PwaInstallCard = ({ canInstall, isIosBrowser, onInstall, onDismiss }) => {
+            const [showIosSteps, setShowIosSteps] = useState(false);
+
+            if (!canInstall && !isIosBrowser) return null;
+
+            return (
+                <div className="mx-4 mt-5 bg-surface border border-brand-200/70 rounded-2xl p-3.5 shadow-sm space-y-2.5">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-9 h-9 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-slate-800">ثبّت ميزاني على هاتفك</p>
+                                <p className="text-[11px] text-slate-500">وصول سريع بملء الشاشة وبدون إنترنت</p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                            {canInstall ? (
+                                <button
+                                    type="button"
+                                    onClick={onInstall}
+                                    className="px-3.5 py-2 rounded-xl bg-brand-600 text-white text-xs font-bold hover:bg-brand-700 transition-colors"
+                                >
+                                    تثبيت
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => setShowIosSteps((prev) => !prev)}
+                                    className="px-3 py-2 rounded-xl bg-brand-50 text-brand-700 text-xs font-bold hover:bg-brand-100 transition-colors"
+                                >
+                                    {showIosSteps ? 'إخفاء' : 'الطريقة'}
+                                </button>
+                            )}
+                            <button
+                                type="button"
+                                onClick={onDismiss}
+                                className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                                aria-label="إغلاق إشعار التثبيت"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+
+                    {isIosBrowser && showIosSteps && (
+                        <p className="text-[11px] text-slate-600 bg-slate-50 rounded-xl px-3 py-2 leading-relaxed">
+                            في متصفح Safari، اضغط على زر <strong>المشاركة (Share)</strong> أسفل الشاشة ثم اختر <strong>«إضافة إلى الشاشة الرئيسية»</strong>.
+                        </p>
+                    )}
+                </div>
+            );
+        };
+
+        // --- Subtle Local Storage Footer (Privacy + Optional JSON Backup/Restore) ---
+        const LocalStorageFooter = ({ dataByPeriod, onImportData, isPersisted, justSaved }) => {
+            const fileInputRef = useRef(null);
+            const [statusMsg, setStatusMsg] = useState('');
+
+            const showStatus = (msg) => {
+                setStatusMsg(msg);
+                setTimeout(() => setStatusMsg(''), 3000);
+            };
+
+            const handleExport = () => {
+                try {
+                    const payload = JSON.stringify(dataByPeriod, null, 2);
+                    const blob = new Blob([payload], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    const dateStr = new Date().toISOString().slice(0, 10);
+                    a.href = url;
+                    a.download = `mizani-backup-${dateStr}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    showStatus('تم حفظ النسخة الاحتياطية على جهازك');
+                } catch (err) {
+                    showStatus('تعذر تصدير النسخة الاحتياطية');
+                }
+            };
+
+            const handleFileChange = (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const parsed = JSON.parse(event.target.result);
+                        if (isValidMizaniData(parsed)) {
+                            onImportData(parsed);
+                            showStatus('تمت استعادة بياناتك بنجاح');
+                        } else {
+                            showStatus('ملف النسخة الاحتياطية غير صالح');
+                        }
+                    } catch (err) {
+                        showStatus('تعذر قراءة الملف');
+                    }
+                };
+                reader.readAsText(file);
+                e.target.value = '';
+            };
+
+            return (
+                <footer className="px-5 pt-6 pb-2 text-center space-y-2">
+                    <p className="text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
+                        <span
+                            className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                                justSaved ? 'bg-brand-500' : 'bg-emerald-400'
+                            }`}
+                        ></span>
+                        <span>
+                            {justSaved
+                                ? 'تم الحفظ محليًا على جهازك ✓'
+                                : isPersisted
+                                ? 'بياناتك محفوظة محليًا بشكل دائم على جهازك'
+                                : 'بياناتك محفوظة محليًا على جهازك فقط'}
+                        </span>
+                    </p>
+                    <div className="flex items-center justify-center gap-3 text-[11px] font-medium">
+                        <button
+                            type="button"
+                            onClick={handleExport}
+                            className="text-slate-500 hover:text-brand-600 transition-colors py-1 px-2"
+                        >
+                            حفظ نسخة احتياطية
+                        </button>
+                        <span className="text-slate-300">•</span>
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="text-slate-500 hover:text-brand-600 transition-colors py-1 px-2"
+                        >
+                            استعادة نسخة
+                        </button>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="application/json,.json"
+                            onChange={handleFileChange}
+                            className="hidden"
+                        />
+                    </div>
+                    {statusMsg && (
+                        <p className="text-[11px] font-bold text-brand-600">{statusMsg}</p>
+                    )}
+                </footer>
+            );
+        };
+
+        // --- Main App Component ---
+        const App = () => {
+            const [period, setPeriod] = useState(() =>
+                loadSavedString(STORAGE_KEYS.period, ['weekly', 'monthly', 'yearly'], 'weekly')
+            );
+            const [dataByPeriod, setDataByPeriod] = useState(loadSavedData);
+            const [selectedDomainId, setSelectedDomainId] = useState(() => {
+                const savedId = loadSavedString(STORAGE_KEYS.selectedDomain, null, null);
+                const initial = loadSavedData();
+                const savedPeriod = loadSavedString(STORAGE_KEYS.period, ['weekly', 'monthly', 'yearly'], 'weekly');
+                const list = initial[savedPeriod] || [];
+                if (savedId && list.some((d) => d.id === savedId)) return savedId;
+                return list[0]?.id || null;
+            });
+            const [viewMode, setViewMode] = useState(() =>
+                loadSavedString(STORAGE_KEYS.viewMode, ['focus', 'all'], 'focus')
+            );
+            const [showAddDomain, setShowAddDomain] = useState(false);
+
+            // PWA Install & Offline States
+            const [deferredPrompt, setDeferredPrompt] = useState(null);
+            const [dismissedInstall, setDismissedInstall] = useState(false);
+            const [isOffline, setIsOffline] = useState(() =>
+                typeof navigator !== 'undefined' ? !navigator.onLine : false
+            );
+            const [isPersisted, setIsPersisted] = useState(false);
+            const [justSaved, setJustSaved] = useState(false);
+            const isFirstRender = useRef(true);
+
+            const isStandalone = useMemo(() => {
+                if (typeof window === 'undefined') return false;
+                return (
+                    window.matchMedia?.('(display-mode: standalone)')?.matches ||
+                    window.navigator?.standalone === true
+                );
+            }, []);
+
+            const isIosBrowser = useMemo(() => {
+                if (typeof navigator === 'undefined') return false;
+                return /iphone|ipad|ipod/i.test(navigator.userAgent) && !isStandalone;
+            }, [isStandalone]);
+
+            useEffect(() => {
+                try {
+                    window.localStorage.setItem(STORAGE_KEYS.data, JSON.stringify(dataByPeriod));
+                    if (isFirstRender.current) {
+                        isFirstRender.current = false;
+                    } else {
+                        setJustSaved(true);
+                        const timer = setTimeout(() => setJustSaved(false), 1800);
+                        return () => clearTimeout(timer);
+                    }
+                } catch (err) {}
+            }, [dataByPeriod]);
+
+            useEffect(() => {
+                const requestPersistence = async () => {
+                    try {
+                        if (navigator.storage && navigator.storage.persist) {
+                            const alreadyPersisted = await navigator.storage.persisted();
+                            if (alreadyPersisted) {
+                                setIsPersisted(true);
+                            } else {
+                                const granted = await navigator.storage.persist();
+                                setIsPersisted(Boolean(granted));
+                            }
+                        }
+                    } catch (err) {}
+                };
+                requestPersistence();
+            }, []);
+
+            useEffect(() => {
+                try {
+                    window.localStorage.setItem(STORAGE_KEYS.period, period);
+                } catch (err) {}
+            }, [period]);
+
+            useEffect(() => {
+                try {
+                    window.localStorage.setItem(STORAGE_KEYS.viewMode, viewMode);
+                } catch (err) {}
+            }, [viewMode]);
+
+            useEffect(() => {
+                try {
+                    if (selectedDomainId) {
+                        window.localStorage.setItem(STORAGE_KEYS.selectedDomain, selectedDomainId);
+                    }
+                } catch (err) {}
+            }, [selectedDomainId]);
+
+            useEffect(() => {
+                const handleBeforeInstallPrompt = (e) => {
+                    e.preventDefault();
+                    setDeferredPrompt(e);
+                };
+                const handleAppInstalled = () => {
+                    setDeferredPrompt(null);
+                    setDismissedInstall(true);
+                };
+                const handleOnline = () => setIsOffline(false);
+                const handleOffline = () => setIsOffline(true);
+
+                window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+                window.addEventListener('appinstalled', handleAppInstalled);
+                window.addEventListener('online', handleOnline);
+                window.addEventListener('offline', handleOffline);
+
+                return () => {
+                    window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+                    window.removeEventListener('appinstalled', handleAppInstalled);
+                    window.removeEventListener('online', handleOnline);
+                    window.removeEventListener('offline', handleOffline);
+                };
+            }, []);
+
+            const handlePwaInstall = async () => {
+                if (!deferredPrompt) return;
+                try {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        setDeferredPrompt(null);
+                    }
+                } catch (err) {}
+            };
+
+            const domainRefs = useRef({});
+            const domains = dataByPeriod[period] || [];
+
+            useEffect(() => {
+                if (domains.length === 0) {
+                    setSelectedDomainId(null);
+                } else if (!domains.some((d) => d.id === selectedDomainId)) {
+                    setSelectedDomainId(domains[0].id);
+                }
+            }, [period, domains, selectedDomainId]);
+
+            const overallScore = useMemo(() => calculateOverallScore(domains), [domains]);
+
+            const updateCurrentDomains = (updater) => {
+                setDataByPeriod((prev) => ({
+                    ...prev,
+                    [period]: updater(prev[period]),
+                }));
+            };
+
+            const toggleGoal = (domainId, goalId) => {
+                triggerHaptic();
+                updateCurrentDomains((list) =>
+                    list.map((d) =>
+                        d.id !== domainId
+                            ? d
+                            : {
+                                  ...d,
+                                  goals: d.goals.map((g) =>
+                                      g.id === goalId ? { ...g, completed: !g.completed } : g
+                                  ),
+                              }
+                    )
+                );
+            };
+
+            const updateNumericGoal = (domainId, goalId, delta) => {
+                triggerHaptic();
+                updateCurrentDomains((list) =>
+                    list.map((d) =>
+                        d.id !== domainId
+                            ? d
+                            : {
+                                  ...d,
+                                  goals: d.goals.map((g) => {
+                                      if (g.id !== goalId) return g;
+                                      const nextVal = Math.max(0, Math.min(g.target, g.current + delta));
+                                      return { ...g, current: nextVal };
+                                  }),
+                              }
+                    )
+                );
+            };
+
+            const addGoal = (domainId, newGoal) => {
+                updateCurrentDomains((list) =>
+                    list.map((d) => (d.id !== domainId ? d : { ...d, goals: [...d.goals, newGoal] }))
+                );
+            };
+
+            const removeGoal = (domainId, goalId) => {
+                updateCurrentDomains((list) =>
+                    list.map((d) =>
+                        d.id !== domainId
+                            ? d
+                            : { ...d, goals: d.goals.filter((g) => g.id !== goalId) }
+                    )
+                );
+            };
+
+            const addDomain = (name) => {
+                const iconMap = {
+                    العلاقات: '🤝',
+                    الاجتماعي: '🤝',
+                    الترفيهي: '🌿',
+                    الشخصي: '✨',
+                    السفر: '✈️',
+                };
+                const newId = 'domain_' + Date.now();
+                const newDomain = {
+                    id: newId,
+                    name,
+                    icon: iconMap[name] || '🌱',
+                    goals: [],
+                };
+                updateCurrentDomains((list) => [...list, newDomain]);
+                setSelectedDomainId(newId);
+                setViewMode('focus');
+                setShowAddDomain(false);
+            };
+
+            const removeDomain = (domainId) => {
+                updateCurrentDomains((list) => list.filter((d) => d.id !== domainId));
+            };
+
+            const restoreDefaults = () => {
+                setDataByPeriod((prev) => ({
+                    ...prev,
+                    [period]: initialData[period],
+                }));
+                setSelectedDomainId(initialData[period][0]?.id || null);
+            };
+
+            const handleSelectDomain = (domainId) => {
+                setSelectedDomainId(domainId);
+                if (viewMode === 'all' && domainRefs.current[domainId]) {
+                    domainRefs.current[domainId].scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            };
+
+            const goToNextDomain = () => {
+                if (domains.length <= 1) return;
+                const currentIndex = domains.findIndex((d) => d.id === selectedDomainId);
+                const nextIndex = (currentIndex + 1) % domains.length;
+                setSelectedDomainId(domains[nextIndex].id);
+            };
+
+            const activeDomain = domains.find((d) => d.id === selectedDomainId) || domains[0];
+            const activeIndex = domains.findIndex((d) => d.id === activeDomain?.id);
+            const nextDomain = domains.length > 1 ? domains[(activeIndex + 1) % domains.length] : null;
+
+            return (
+                <div className="min-h-screen bg-background flex justify-center">
+                    <main className="w-full max-w-[430px] min-h-screen flex flex-col safe-bottom">
+                        {/* --- TOP HEADER & WHEEL OF LIFE --- */}
+                        <header className="bg-surface rounded-b-[2rem] border-b border-slate-200/70 px-5 safe-top pb-5 shadow-sm space-y-5">
+                            {isOffline && (
+                                <div className="text-center">
+                                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full">
+                                        <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                                        وضع عدم الاتصال — تغييراتك محفوظة محليًا
+                                    </span>
+                                </div>
+                            )}
+
+                            <div className="flex items-center justify-between gap-3">
+                                <div>
+                                    <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">ميزاني</h1>
+                                    <p className="text-xs text-slate-500 mt-0.5">توازن أفضل، خطوة بخطوة</p>
+                                </div>
+
+                                <div
+                                    className="bg-slate-100 p-1 rounded-2xl flex items-center"
+                                    role="tablist"
+                                    aria-label="الفترة الزمنية"
+                                >
+                                    <button
+                                        type="button"
+                                        role="tab"
+                                        aria-selected={period === 'weekly'}
+                                        onClick={() => setPeriod('weekly')}
+                                        className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+                                            period === 'weekly'
+                                                ? 'bg-white text-brand-600 shadow-sm'
+                                                : 'text-slate-500 hover:text-slate-700'
+                                        }`}
+                                    >
+                                        أسبوعي
+                                    </button>
+                                    <button
+                                        type="button"
+                                        role="tab"
+                                        aria-selected={period === 'monthly'}
+                                        onClick={() => setPeriod('monthly')}
+                                        className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+                                            period === 'monthly'
+                                                ? 'bg-white text-brand-600 shadow-sm'
+                                                : 'text-slate-500 hover:text-slate-700'
+                                        }`}
+                                    >
+                                        شهري
+                                    </button>
+                                    <button
+                                        type="button"
+                                        role="tab"
+                                        aria-selected={period === 'yearly'}
+                                        onClick={() => setPeriod('yearly')}
+                                        className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+                                            period === 'yearly'
+                                                ? 'bg-white text-brand-600 shadow-sm'
+                                                : 'text-slate-500 hover:text-slate-700'
+                                        }`}
+                                    >
+                                        سنوي
+                                    </button>
+                                </div>
+                            </div>
+
+                            {domains.length > 0 ? (
+                                <div className="flex items-center justify-between bg-slate-50/90 border border-slate-100 rounded-2xl px-4 py-3">
+                                    <div>
+                                        <p className="text-xs text-slate-500">
+                                            {period === 'weekly'
+                                                ? 'إنجازك هذا الأسبوع'
+                                                : period === 'monthly'
+                                                ? 'إنجازك هذا الشهر'
+                                                : 'إنجازك هذه السنة'}
+                                        </p>
+                                        <p className="text-lg font-extrabold text-slate-800 mt-0.5">
+                                            {overallScore}%{' '}
+                                            <span className="text-xs font-medium text-slate-500">
+                                                متوسط {domains.length} مجالات
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <OverallProgressRing score={overallScore} />
+                                </div>
+                            ) : (
+                                <div className="text-center bg-slate-50 border border-slate-100 rounded-2xl px-4 py-4 space-y-1">
+                                    <p className="text-base font-bold text-slate-800">ابدأ ببناء ميزانك</p>
+                                    <p className="text-xs text-slate-500">أضف أهدافك في المجالات التي تهمك.</p>
+                                </div>
+                            )}
+
+                            <WheelOfLife
+                                domains={domains}
+                                selectedDomainId={viewMode === 'focus' ? selectedDomainId : null}
+                                onSegmentClick={handleSelectDomain}
+                                isEmpty={domains.length === 0}
+                            />
+                        </header>
+
+                        {/* --- MAIN CONTENT --- */}
+                        {domains.length === 0 ? (
+                            <div className="px-5 pt-6 space-y-4">
+                                <AddDomainForm onAdd={addDomain} buttonText="أضف أول هدف / مجال" />
+                                <button
+                                    type="button"
+                                    onClick={restoreDefaults}
+                                    className="w-full py-2.5 text-xs font-medium text-slate-400 hover:text-brand-600 transition-colors"
+                                >
+                                    استعادة المجالات الافتراضية
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex-1 px-4 pt-5 space-y-4">
+                                <div className="flex items-center justify-between px-1">
+                                    <span className="text-xs font-bold text-slate-500">
+                                        {viewMode === 'focus'
+                                            ? 'ركّز على مجال واحد'
+                                            : `جميع المجالات (${domains.length})`}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => setViewMode((prev) => (prev === 'focus' ? 'all' : 'focus'))}
+                                        className="text-xs font-bold text-brand-600 hover:text-brand-700 bg-brand-50 px-3 py-1.5 rounded-full transition-colors"
+                                    >
+                                        {viewMode === 'focus' ? 'عرض الكل' : 'وضع التركيز'}
+                                    </button>
+                                </div>
+
+                                <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-4 px-4">
+                                    {domains.map((domain) => {
+                                        const isSelected = domain.id === activeDomain?.id && viewMode === 'focus';
+                                        const domainScore = calculateDomainScore(domain);
+                                        return (
+                                            <button
+                                                key={domain.id}
+                                                type="button"
+                                                onClick={() => {
+                                                    setViewMode('focus');
+                                                    setSelectedDomainId(domain.id);
+                                                }}
+                                                className={`flex-shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-2xl text-sm font-medium transition-all border min-h-[44px] ${
+                                                    isSelected
+                                                        ? 'bg-brand-600 text-white border-brand-600 shadow-sm'
+                                                        : 'bg-surface text-slate-600 border-slate-200 hover:border-brand-300'
+                                                }`}
+                                            >
+                                                <span>{domain.icon}</span>
+                                                <span>{domain.name}</span>
+                                                <span
+                                                    className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${
+                                                        isSelected
+                                                            ? 'bg-white/20 text-white'
+                                                            : 'bg-slate-100 text-slate-500'
+                                                    }`}
+                                                >
+                                                    {domainScore}%
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowAddDomain((prev) => !prev)}
+                                        className="flex-shrink-0 flex items-center gap-1 px-3.5 py-2.5 rounded-2xl text-sm font-bold border border-dashed border-slate-300 text-slate-500 hover:border-brand-400 hover:text-brand-600 transition-colors min-h-[44px]"
+                                    >
+                                        <span>+</span>
+                                        <span>مجال</span>
+                                    </button>
+                                </div>
+
+                                {showAddDomain && (
+                                    <AddDomainForm
+                                        onAdd={addDomain}
+                                        initialEditing={true}
+                                        onCancel={() => setShowAddDomain(false)}
+                                    />
+                                )}
+
+                                {viewMode === 'focus' && activeDomain && (
+                                    <div className="space-y-4">
+                                        <DomainCard
+                                            key={activeDomain.id}
+                                            domain={activeDomain}
+                                            score={calculateDomainScore(activeDomain)}
+                                            onToggle={(goalId) => toggleGoal(activeDomain.id, goalId)}
+                                            onUpdateNumeric={(goalId, delta) =>
+                                                updateNumericGoal(activeDomain.id, goalId, delta)
+                                            }
+                                            onAddGoal={(goal) => addGoal(activeDomain.id, goal)}
+                                            onRemoveGoal={(goalId) => removeGoal(activeDomain.id, goalId)}
+                                            onRemove={() => removeDomain(activeDomain.id)}
+                                        />
+
+                                        {nextDomain && (
+                                            <button
+                                                type="button"
+                                                onClick={goToNextDomain}
+                                                className="w-full flex items-center justify-between bg-surface border border-slate-200/80 hover:border-brand-300 rounded-2xl px-4 py-3.5 text-sm transition-all shadow-sm min-h-[52px]"
+                                            >
+                                                <div className="flex items-center gap-2 text-slate-600">
+                                                    <span className="text-xs text-slate-400">المجال التالي:</span>
+                                                    <span className="font-bold text-slate-800">
+                                                        {nextDomain.icon} {nextDomain.name}
+                                                    </span>
+                                                </div>
+                                                <span className="text-brand-600 font-bold text-xs">انتقال ←</span>
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+
+                                {viewMode === 'all' && (
+                                    <div className="space-y-5">
+                                        {domains.map((domain) => (
+                                            <DomainCard
+                                                key={domain.id}
+                                                domain={domain}
+                                                score={calculateDomainScore(domain)}
+                                                onToggle={(goalId) => toggleGoal(domain.id, goalId)}
+                                                onUpdateNumeric={(goalId, delta) =>
+                                                    updateNumericGoal(domain.id, goalId, delta)
+                                                }
+                                                onAddGoal={(goal) => addGoal(domain.id, goal)}
+                                                onRemoveGoal={(goalId) => removeGoal(domain.id, goalId)}
+                                                onRemove={() => removeDomain(domain.id)}
+                                                ref={(el) => {
+                                                    domainRefs.current[domain.id] = el;
+                                                }}
+                                            />
+                                        ))}
+
+                                        <div className="pt-2">
+                                            <AddDomainForm onAdd={addDomain} />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {!isStandalone && !dismissedInstall && (
+                            <PwaInstallCard
+                                canInstall={Boolean(deferredPrompt)}
+                                isIosBrowser={isIosBrowser}
+                                onInstall={handlePwaInstall}
+                                onDismiss={() => setDismissedInstall(true)}
+                            />
+                        )}
+
+                        <LocalStorageFooter
+                            dataByPeriod={dataByPeriod}
+                            isPersisted={isPersisted}
+                            justSaved={justSaved}
+                            onImportData={(imported) => {
+                                setDataByPeriod(imported);
+                                setSelectedDomainId(imported[period]?.[0]?.id || null);
+                            }}
+                        />
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            <ErrorBoundary>
+                <App />
+            </ErrorBoundary>
+        );
+    </script>
+
+    <!-- Register Service Worker for Offline PWA Support -->
+    <script>
+        if (
+            'serviceWorker' in navigator &&
+            (window.location.protocol === 'https:' || window.location.hostname === 'localhost')
+        ) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
+        }
+    </script>
+</body>
+</html>
