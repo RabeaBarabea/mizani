@@ -1,0 +1,27 @@
+{
+  "name": "ميزاني - توازن أفضل خطوة بخطوة",
+  "short_name": "ميزاني",
+  "description": "حدد ما تريد إنجازه في حياتك، ثم شاهد توازنك.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#0d9488",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d9488'/%3E%3Ccircle cx='256' cy='256' r='148' fill='none' stroke='%23ccfbf1' stroke-width='20' stroke-opacity='0.35'/%3E%3Cpath d='M256 256 L256 108 A148 148 0 0 1 384 182 Z' fill='%23ffffff' fill-opacity='0.95'/%3E%3Cpath d='M256 256 L384 182 A148 148 0 0 1 384 330 Z' fill='%2399f6e4' fill-opacity='0.9'/%3E%3Cpath d='M256 256 L384 330 A148 148 0 0 1 256 404 Z' fill='%23ffffff' fill-opacity='0.8'/%3E%3Cpath d='M256 256 L256 404 A148 148 0 0 1 128 330 Z' fill='%235eead4' fill-opacity='0.85'/%3E%3Cpath d='M256 256 L128 330 A148 148 0 0 1 128 182 Z' fill='%23ffffff' fill-opacity='0.7'/%3E%3Cpath d='M256 256 L128 182 A148 148 0 0 1 256 108 Z' fill='%2399f6e4' fill-opacity='0.75'/%3E%3Ccircle cx='256' cy='256' r='26' fill='%230d9488' stroke='%23ffffff' stroke-width='8'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d9488'/%3E%3Ccircle cx='256' cy='256' r='148' fill='none' stroke='%23ccfbf1' stroke-width='20' stroke-opacity='0.35'/%3E%3Cpath d='M256 256 L256 108 A148 148 0 0 1 384 182 Z' fill='%23ffffff' fill-opacity='0.95'/%3E%3Cpath d='M256 256 L384 182 A148 148 0 0 1 384 330 Z' fill='%2399f6e4' fill-opacity='0.9'/%3E%3Cpath d='M256 256 L384 330 A148 148 0 0 1 256 404 Z' fill='%23ffffff' fill-opacity='0.8'/%3E%3Cpath d='M256 256 L256 404 A148 148 0 0 1 128 330 Z' fill='%235eead4' fill-opacity='0.85'/%3E%3Cpath d='M256 256 L128 330 A148 148 0 0 1 128 182 Z' fill='%23ffffff' fill-opacity='0.7'/%3E%3Cpath d='M256 256 L128 182 A148 148 0 0 1 256 108 Z' fill='%2399f6e4' fill-opacity='0.75'/%3E%3Ccircle cx='256' cy='256' r='26' fill='%230d9488' stroke='%23ffffff' stroke-width='8'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
