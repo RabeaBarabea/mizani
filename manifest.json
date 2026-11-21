@@ -1,4 +1,5 @@
 {
+  "id": "/mizani/",
   "name": "ميزاني - توازن أفضل خطوة بخطوة",
   "short_name": "ميزاني",
   "description": "حدد ما تريد إنجازه في حياتك، ثم شاهد توازنك.",
@@ -12,16 +13,81 @@
   "theme_color": "#0d9488",
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d9488'/%3E%3Ccircle cx='256' cy='256' r='148' fill='none' stroke='%23ccfbf1' stroke-width='20' stroke-opacity='0.35'/%3E%3Cpath d='M256 256 L256 108 A148 148 0 0 1 384 182 Z' fill='%23ffffff' fill-opacity='0.95'/%3E%3Cpath d='M256 256 L384 182 A148 148 0 0 1 384 330 Z' fill='%2399f6e4' fill-opacity='0.9'/%3E%3Cpath d='M256 256 L384 330 A148 148 0 0 1 256 404 Z' fill='%23ffffff' fill-opacity='0.8'/%3E%3Cpath d='M256 256 L256 404 A148 148 0 0 1 128 330 Z' fill='%235eead4' fill-opacity='0.85'/%3E%3Cpath d='M256 256 L128 330 A148 148 0 0 1 128 182 Z' fill='%23ffffff' fill-opacity='0.7'/%3E%3Cpath d='M256 256 L128 182 A148 148 0 0 1 256 108 Z' fill='%2399f6e4' fill-opacity='0.75'/%3E%3Ccircle cx='256' cy='256' r='26' fill='%230d9488' stroke='%23ffffff' stroke-width='8'/%3E%3C/svg%3E",
+      "src": "./icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d9488'/%3E%3Ccircle cx='256' cy='256' r='148' fill='none' stroke='%23ccfbf1' stroke-width='20' stroke-opacity='0.35'/%3E%3Cpath d='M256 256 L256 108 A148 148 0 0 1 384 182 Z' fill='%23ffffff' fill-opacity='0.95'/%3E%3Cpath d='M256 256 L384 182 A148 148 0 0 1 384 330 Z' fill='%2399f6e4' fill-opacity='0.9'/%3E%3Cpath d='M256 256 L384 330 A148 148 0 0 1 256 404 Z' fill='%23ffffff' fill-opacity='0.8'/%3E%3Cpath d='M256 256 L256 404 A148 148 0 0 1 128 330 Z' fill='%235eead4' fill-opacity='0.85'/%3E%3Cpath d='M256 256 L128 330 A148 148 0 0 1 128 182 Z' fill='%23ffffff' fill-opacity='0.7'/%3E%3Cpath d='M256 256 L128 182 A148 148 0 0 1 256 108 Z' fill='%2399f6e4' fill-opacity='0.75'/%3E%3Ccircle cx='256' cy='256' r='26' fill='%230d9488' stroke='%23ffffff' stroke-width='8'/%3E%3C/svg%3E",
+      "src": "./icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
+
+
+Step 3: Replace sw.js on GitHub (Fixes Offline Support)
+
+Open sw.js in your GitHub repo, tap Edit, and replace everything with:
+
+const CACHE_NAME = 'mizani-cache-v2';
+const CORE_ASSETS = [
+  './',
+  './index.html',
+  './manifest.json'
+];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        fetch(event.request)
+          .then((networkResponse) => {
+            if (networkResponse && (networkResponse.status === 200 || networkResponse.type === 'opaque')) {
+              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse.clone()));
+            }
+          })
+          .catch(() => {});
+        return cachedResponse;
+      }
+
+      return fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && (networkResponse.status === 200 || networkResponse.type === 'opaque')) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match('./index.html'));
+    })
+  );
+});
+
+
